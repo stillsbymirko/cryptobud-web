@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  transactions  Transaction[]
+}
+
+model Transaction {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  date            DateTime
+  cryptocurrency  String
+  amount          Float
+  priceEUR        Float
+  type            String   // buy, sell, staking, transfer
+  exchange        String   // 21bitcoin, bitpanda, kraken, etc.
+  
+  feeAmount       Float?
+  feeAsset        String?
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+  @@index([date])
+  @@index([cryptocurrency])
+  @@index([type])
+}
