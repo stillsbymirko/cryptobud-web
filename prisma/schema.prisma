@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -15,6 +16,8 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   transactions  Transaction[]
+
+  @@map("users")
 }
 
 model Transaction {
@@ -26,7 +29,7 @@ model Transaction {
   cryptocurrency  String
   amount          Float
   priceEUR        Float
-  type            String   // buy, sell, staking, transfer
+  type            String   // buy, sell, staking, transfer, withdrawal
   exchange        String   // 21bitcoin, bitpanda, kraken, etc.
   
   feeAmount       Float?
@@ -40,4 +43,5 @@ model Transaction {
   @@index([date])
   @@index([cryptocurrency])
   @@index([type])
+  @@map("transactions")
 }
