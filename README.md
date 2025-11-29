@@ -1,241 +1,278 @@
-# CryptoBuddy Web App 🚀
+# CryptoBuddy Web
 
-**Cryptocurrency Tax Management for Germany** - FIFO Calculation, §23 EStG, §22 Nr. 3 EStG
+**Crypto Portfolio & Tax Management für Deutschland** 🇩🇪
+
+Eine moderne Web-App zur Verwaltung deines Crypto-Portfolios mit automatischer Steuerberechnung nach deutschem Recht (§23 EStG, §22 Nr. 3 EStG).
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/stillsbymirko/cryptobud-web)
 
 ---
 
-## 🎯 Features
+## ✨ Features
 
-### 📊 Portfolio Management
-- Real-time crypto portfolio tracking
-- Automatic valuation with CoinGecko API
-- Profit/Loss calculation (realized & unrealized)
-- Historical performance charts
-- Multi-cryptocurrency support
-
-### 💰 German Tax Calculation
-- **FIFO Method** (First-In-First-Out)
-- **§23 EStG**: 1-year holding period for tax-free sales
-- **§22 Nr. 3 EStG**: 256€ tax-free limit for staking rewards
-- Automatic tracking of tax-free sale dates
-- Annual tax reports
-
-### 📁 CSV Import
-Supported exchanges:
-- ✅ **21Bitcoin** (Full support for your transactions!)
-- ✅ **Bitpanda**
-- ✅ **Kraken**
-- ✅ **Binance**
-- ✅ **Coinbase**
-- ✅ **Bitstamp**
-
-### 📄 Export Functions
-- PDF tax reports for Steuerberater
-- CSV export of all transactions
-- Annual summary reports
-- Custom date range selection
-
-### 🔐 Security
-- Multi-user authentication with NextAuth.js
-- Encrypted passwords with bcrypt
-- GDPR compliant
-- Secure database with Prisma
+✅ **CSV Import** - 21Bitcoin, Bitpanda, Kraken, Binance, Coinbase  
+✅ **FIFO Steuerberechnung** - Automatisch nach deutschem Steuerrecht  
+✅ **1-Jahres-Haltefrist** - Tracking für steuerfreie Verkäufe  
+✅ **Staking Rewards** - 256€ Freigrenze (§22 Nr. 3 EStG)  
+✅ **Portfolio Dashboard** - Live-Übersicht deiner Holdings  
+✅ **Transaction History** - Alle Trades im Detail  
+✅ **PDF/CSV Export** - Für Steuerberater  
+✅ **Multi-User** - Jeder hat sein eigenes Portfolio  
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: PostgreSQL + Prisma ORM
-- **Auth**: NextAuth.js
-- **Charts**: Recharts
-- **CSV Parser**: PapaParse
-- **PDF Generation**: jsPDF
+- **Frontend:** Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS
+- **Backend:** Next.js API Routes, NextAuth.js
+- **Database:** PostgreSQL (via Supabase), Prisma ORM
+- **Auth:** NextAuth.js mit Credentials Provider
+- **Charts:** Recharts
+- **Deployment:** Vercel + Supabase
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
-### Prerequisites
-- Node.js 18+ 
-- PostgreSQL database (or use [Supabase](https://supabase.com/) free tier)
-- npm or pnpm
+### 1. Repository klonen
 
-### Installation
-
-1. **Clone the repository**
 ```bash
 git clone https://github.com/stillsbymirko/cryptobud-web.git
 cd cryptobud-web
 ```
 
-2. **Install dependencies**
+### 2. Setup-Script ausführen
+
 ```bash
-npm install
+chmod +x setup.sh
+./setup.sh
 ```
 
-3. **Set up environment variables**
-Create a `.env` file:
-```bash
-cp .env.example .env
-```
+Das Script:
+- Erstellt `.env.local` mit generiertem `NEXTAUTH_SECRET`
+- Installiert alle Dependencies
+- Bietet an, Prisma DB zu pushen
 
-Edit `.env`:
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/cryptobud"
+### 3. Environment konfigurieren
+
+Bearbeite `.env.local` und füge deine Supabase-Daten ein:
+
+```bash
+# Supabase Connection Strings (aus Supabase Dashboard)
+DATABASE_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
+
 NEXTAUTH_URL="http://localhost:3000"
-NEXTAUTH_SECRET="generate-with: openssl rand -base64 32"
+NEXTAUTH_SECRET="[wird automatisch generiert]"
 ```
 
-4. **Set up database**
+### 4. Datenbank erstellen
+
 ```bash
-npm run db:push
+npx prisma db push
 ```
 
-5. **Start development server**
+### 5. Development Server starten
+
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) 🎉
+Öffne [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 📦 Project Structure
+## 📖 Verwendung
+
+### 1. Account erstellen
+- Gehe zu `/auth/register`
+- Erstelle einen Account mit Email + Passwort
+
+### 2. CSV importieren
+- Navigiere zu "CSV Import" im Dashboard
+- Wähle deine 21Bitcoin (oder andere) CSV-Datei
+- Vorschau prüfen → Import bestätigen
+
+### 3. Portfolio ansehen
+- Dashboard zeigt aktuelle Holdings
+- Staking Rewards mit 256€ Limit-Tracking
+- Übersicht über alle Assets
+
+### 4. Steuer-Report exportieren
+- Gehe zu "Export"
+- Wähle PDF (HTML) oder CSV
+- FIFO-Berechnung wird automatisch durchgeführt
+
+---
+
+## 📦 Projekt-Struktur
 
 ```
 cryptobud-web/
-├── app/                  # Next.js App Router
-│   ├── page.tsx         # Landing page
-│   ├── layout.tsx       # Root layout
-│   └── dashboard/       # Protected dashboard (coming soon)
-├── lib/                 # Core business logic
-│   ├── csv-import.ts    # CSV parser (21Bitcoin format)
-│   └── tax-calculator.ts # FIFO tax calculation
+├── app/
+│   ├── api/
+│   │   ├── auth/          # NextAuth.js config
+│   │   ├── import/        # CSV import endpoints
+│   │   └── export/        # CSV/PDF export endpoints
+│   ├── auth/              # Login/Register pages
+│   ├── dashboard/         # Protected dashboard
+│   │   ├── import/        # CSV upload UI
+│   │   ├── transactions/  # Transaction list
+│   │   └── export/        # Export UI
+│   ├── layout.tsx
+│   └── page.tsx           # Landing page
+├── lib/
+│   ├── csv-import.ts      # CSV parser (21Bitcoin)
+│   ├── tax-calculator.ts  # FIFO tax engine
+│   └── prisma.ts          # Prisma client
 ├── prisma/
-│   └── schema.prisma    # Database schema
-└── components/          # Reusable UI components (coming soon)
+│   └── schema.prisma      # Database schema
+├── setup.sh               # Setup script
+└── README.md
 ```
 
 ---
 
-## 🧮 Tax Calculation Examples
+## 📁 CSV Import Beispiel
 
-### FIFO Calculation
+### 21Bitcoin Format
+
+```csv
+id,exchange_name,transaction_date,buy_asset,buy_amount,sell_asset,sell_amount,fee_asset,fee_amount,transaction_type,note
+1,21Bitcoin,15.12.2024 10:30:00,BTC,0.001,EUR,95.50,EUR,0.95,trade,
+```
+
+Die App parsed automatisch:
+- Kaufdatum für Haltefrist-Berechnung
+- Menge + Preis für FIFO
+- Gebühren (werden zum Kaufpreis addiert)
+- Typ (trade/deposit/withdrawal)
+
+---
+
+## 🧮 Steuerberechnung
+
+### § 23 EStG - Private Veräußerungsgeschäfte
+- **FIFO-Methode:** First-In-First-Out
+- **1-Jahres-Frist:** Verkäufe nach 1 Jahr sind steuerfrei
+- **Automatische Berechnung:** Welche Coins sind wann steuerfrei
+
+### § 22 Nr. 3 EStG - Staking Rewards
+- **256€ Freigrenze** pro Jahr
+- Historischer Preis wird beim Erhalt gespeichert
+- Warning wenn Limit überschritten
+
+### Beispiel: Tax Calculation
+
 ```typescript
 import { TaxCalculationService } from '@/lib/tax-calculator';
 
-const report = TaxCalculationService.calculateTaxReport(transactions, 2025);
-console.log(report.totalTaxableGains);  // Steuerpflichtige Gewinne
-console.log(report.totalTaxFreeGains);  // Steuerfreie Gewinne
-```
+const transactions = [
+  { date: '2024-01-15', type: 'buy', cryptocurrency: 'BTC', amount: 0.1, priceEUR: 4000 },
+  { date: '2025-02-20', type: 'sell', cryptocurrency: 'BTC', amount: 0.05, priceEUR: 2500 },
+];
 
-### CSV Import (21Bitcoin)
-```typescript
-import { CSVImportService } from '@/lib/csv-import';
-
-const transactions = CSVImportService.parse21Bitcoin(csvContent);
-const stats = CSVImportService.calculateStats(transactions);
-console.log(stats.averagePrice);  // Durchschnittlicher Kaufpreis
-```
-
----
-
-## 🎨 Design System
-
-Colors (following iOS/macOS design):
-- **Primary**: `#007AFF` (Blue)
-- **Profit**: `#34C759` (Green)
-- **Loss**: `#FF3B30` (Red)
-- **Warning**: `#FF9500` (Orange)
-
----
-
-## 📈 Roadmap
-
-### Phase 1 (Current) ✅
-- [x] Project setup
-- [x] CSV import for 21Bitcoin
-- [x] FIFO tax calculator
-- [x] Database schema
-
-### Phase 2 (Next)
-- [ ] Authentication (Register/Login)
-- [ ] Dashboard UI
-- [ ] Transaction table
-- [ ] CSV upload interface
-
-### Phase 3
-- [ ] PDF export
-- [ ] Charts (Portfolio performance)
-- [ ] Dark mode
-- [ ] Mobile responsive
-
-### Phase 4
-- [ ] Support for more exchanges
-- [ ] DeFi transactions
-- [ ] Multi-language (EN/DE)
-- [ ] Tax optimizer
-
----
-
-## 🧪 Testing with Your Data
-
-You can test the CSV import with your 21Bitcoin transactions:
-
-```typescript
-// Example: Parse your CSV
-const csvContent = `id,exchange_name,depot_name,transaction_date,buy_asset,buy_amount,sell_asset,sell_amount,fee_asset,fee_amount,transaction_type,note,linked_transaction
-2,21bitcoin,main,16.12.2024 20:18:33,BTC,0.00014278,EUR,14.51,EUR,0.49,trade,Standard BTC Purchase,`;
-
-const transactions = CSVImportService.parse21Bitcoin(csvContent);
-const stats = CSVImportService.calculateStats(transactions);
-
-console.log(`Total BTC purchased: ${stats.totalBTC}`);
-console.log(`Average price: ${stats.averagePrice.toFixed(2)} EUR/BTC`);
-console.log(`Remaining BTC: ${stats.remainingBTC}`);
+const report = TaxCalculationService.calculateTaxReport(transactions);
+// {
+//   totalTaxableGains: 500,      // Nach < 1 Jahr
+//   totalTaxFreeGains: 0,
+//   sales: [...],
+//   upcomingTaxFreeSales: [...]
+// }
 ```
 
 ---
 
 ## 🚀 Deployment
 
-### Deploy to Vercel (Recommended)
+### Vercel + Supabase
 
-1. Push to GitHub
-2. Click: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/stillsbymirko/cryptobud-web)
-3. Add environment variables
-4. Deploy! 🎉
+1. **Supabase Projekt erstellen:**
+   - Gehe zu [supabase.com](https://supabase.com)
+   - Neues Projekt erstellen
+   - Kopiere `DATABASE_URL` und `DIRECT_URL`
 
-Vercel will automatically:
-- Build your app
-- Set up PostgreSQL (optional Vercel Postgres addon)
-- Provide a live URL
+2. **GitHub → Vercel verbinden:**
+   - Gehe zu [vercel.com](https://vercel.com)
+   - Import GitHub Repository
+   - Environment Variables hinzufügen:
+     - `DATABASE_URL`
+     - `DIRECT_URL`
+     - `NEXTAUTH_URL` (deine Vercel URL)
+     - `NEXTAUTH_SECRET`
+
+3. **Deploy:**
+   - Vercel deployed automatisch bei jedem Push
+   - Prisma Migrations laufen automatisch
+
+### Environment Variables (Production)
+
+```bash
+DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
+NEXTAUTH_URL="https://cryptobud.vercel.app"
+NEXTAUTH_SECRET="[production-secret]"
+```
 
 ---
 
-## 📝 License
+## 🎨 Design System
 
-MIT License - feel free to use for personal or commercial projects!
+```css
+--primary: #007AFF;       /* iOS Blue */
+--profit: #34C759;        /* Green */
+--loss: #FF3B30;          /* Red */
+--warning: #FF9500;       /* Orange */
+```
+
+---
+
+## 📈 Roadmap
+
+- [x] Phase 1: Grundfunktionen
+  - [x] User Authentication
+  - [x] CSV Import (21Bitcoin)
+  - [x] Dashboard mit Holdings
+  - [x] Transaction List
+  - [x] PDF/CSV Export
+  
+- [x] Phase 2: Steuer-Features
+  - [x] FIFO Tax Calculator
+  - [x] Staking Rewards Tracking
+  - [x] Export für Steuerberater
+
+- [ ] Phase 3: Erweiterte Features
+  - [ ] Modernes Dashboard-Design ([#1](https://github.com/stillsbymirko/cryptobud-web/issues/1))
+  - [ ] CoinGecko API Integration (Live-Preise)
+  - [ ] Charts (Portfolio Performance)
+  - [ ] Weitere Exchanges (Bitpanda, Kraken)
+
+- [ ] Phase 4: Optimization
+  - [ ] Dark Mode
+  - [ ] Mobile App (React Native)
+  - [ ] Multi-Currency Support
 
 ---
 
 ## 🤝 Contributing
 
-Contributions welcome! Feel free to:
-- Report bugs
-- Suggest features
-- Submit pull requests
+Pull Requests sind willkommen! Für größere Änderungen bitte zuerst ein Issue erstellen.
+
+---
+
+## 📝 Lizenz
+
+MIT License - siehe [LICENSE](LICENSE) für Details
 
 ---
 
 ## 📧 Support
 
-Need help? Open an issue on GitHub!
+- **Issues:** [GitHub Issues](https://github.com/stillsbymirko/cryptobud-web/issues)
+- **Email:** miremewf@gmail.com
 
 ---
+
+**Hinweis:** Diese App ist ein Tool zur Unterstützung - bitte konsultiere einen Steuerberater für die finale Steuererklärung.
 
 **Built with ❤️ for the German crypto community**
